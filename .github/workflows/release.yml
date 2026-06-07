@@ -27,6 +27,19 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Restore QING.UIKIT
+        shell: pwsh
+        run: >
+          dotnet restore
+          external/QING.UIKIT/src/QING.UIKIT/QING.UIKIT.vbproj
+
+      - name: Restore FH Language Combo Tool
+        shell: pwsh
+        run: >
+          dotnet restore
+          dotnet/src/FH.LanguageComboTool.Wpf/FH.LanguageComboTool.Wpf.csproj
+          -p:QingUiKitRoot="${{ github.workspace }}\external\QING.UIKIT"
+
       - name: Test
         shell: pwsh
         run: >

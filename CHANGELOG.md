@@ -18,6 +18,8 @@ All notable changes to FH Language Combo Tool are documented here.
 - Self-contained `win-x64` release workflow.
 - Compressed single-file executable release with only English and Simplified
   Chinese framework resources.
+- Optional framework-dependent single-file build for users who already have
+  the .NET 10 Desktop Runtime x64.
 
 ### Safety
 

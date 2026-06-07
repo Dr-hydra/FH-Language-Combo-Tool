@@ -42,12 +42,22 @@ dotnet test .\dotnet\tests\FH.LanguageComboTool.Core.Tests\FH.LanguageComboTool.
 
 ## 发布
 
+自包含单文件：
+
 ```powershell
 dotnet publish .\dotnet\src\FH.LanguageComboTool.Wpf\FH.LanguageComboTool.Wpf.csproj `
   -p:PublishProfile=win-x64-single-file
 ```
 
-发布结果为单个自包含 EXE，不需要额外安装 .NET 运行时。
+框架依赖单文件：
+
+```powershell
+dotnet publish .\dotnet\src\FH.LanguageComboTool.Wpf\FH.LanguageComboTool.Wpf.csproj `
+  -p:PublishProfile=win-x64-framework-dependent
+```
+
+- 自包含版不需要额外安装 .NET 运行时。
+- 框架依赖版体积更小，需要 `.NET 10 Desktop Runtime x64`。
 
 ## 功能
 

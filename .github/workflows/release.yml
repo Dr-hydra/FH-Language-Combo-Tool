@@ -34,7 +34,7 @@ jobs:
           dotnet/tests/FH.LanguageComboTool.Core.Tests/FH.LanguageComboTool.Core.Tests.csproj
           --configuration Release
 
-      - name: Publish win-x64
+      - name: Publish self-contained win-x64
         shell: pwsh
         run: >
           dotnet publish
@@ -51,17 +51,45 @@ jobs:
           -p:DebugSymbols=false
           -p:CopyOutputSymbolsToPublishDirectory=false
           -p:QingUiKitRoot="${{ github.workspace }}\external\QING.UIKIT"
-          -o artifacts/win-x64
+          -o artifacts/self-contained
 
-      - name: Rename executable
+      - name: Publish framework-dependent win-x64
         shell: pwsh
         run: >
-          Move-Item
-          artifacts/win-x64/FH.LanguageComboTool.Wpf.exe
-          FH-Language-Combo-Tool-win-x64.exe
+          dotnet publish
+          dotnet/src/FH.LanguageComboTool.Wpf/FH.LanguageComboTool.Wpf.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained false
+          -p:PublishSingleFile=true
+          -p:PublishTrimmed=false
+          -p:DebugType=none
+          -p:DebugSymbols=false
+          -p:CopyOutputSymbolsToPublishDirectory=false
+          -p:QingUiKitRoot="${{ github.workspace }}\external\QING.UIKIT"
+          -o artifacts/framework-dependent
+
+      - name: Prepare release files
+        shell: pwsh
+        run: |
+          Move-Item `
+            artifacts/self-contained/FH.LanguageComboTool.Wpf.exe `
+            FH-Language-Combo-Tool-win-x64-self-contained.exe
+          Move-Item `
+            artifacts/framework-dependent/FH.LanguageComboTool.Wpf.exe `
+            FH-Language-Combo-Tool-win-x64-framework-dependent.exe
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: FH-Language-Combo-Tool-win-x64.exe
+          files: |
+            FH-Language-Combo-Tool-win-x64-self-contained.exe
+            FH-Language-Combo-Tool-win-x64-framework-dependent.exe
+          body: |
+            ## Downloads
+
+            - **Self-contained**: no .NET installation required.
+            - **Framework-dependent**: smaller download; requires the .NET 10 Desktop Runtime x64.
+
+            Both files are single-executable Windows x64 builds.
           generate_release_notes: true

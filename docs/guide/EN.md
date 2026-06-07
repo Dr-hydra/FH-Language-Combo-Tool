@@ -8,8 +8,12 @@ and English interfaces.
 
 ## Download
 
-Download and run `FH-Language-Combo-Tool-win-x64.exe` from this project's
-Releases page. The .NET runtime does not need to be installed separately.
+Choose one file from this project's Releases page:
+
+- `FH-Language-Combo-Tool-win-x64-self-contained.exe`: no .NET installation
+  required; recommended for most users.
+- `FH-Language-Combo-Tool-win-x64-framework-dependent.exe`: smaller download;
+  requires the .NET 10 Desktop Runtime x64.
 
 ## First Run
 

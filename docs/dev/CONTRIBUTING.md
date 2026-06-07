@@ -48,4 +48,4 @@ dotnet test .\dotnet\tests\FH.LanguageComboTool.Core.Tests\FH.LanguageComboTool.
 ## 发布
 
 推送 `v*` 标签后，GitHub Actions 会检出固定版本的 QING.UIKIT，运行测试，
-并发布自包含的单文件 `win-x64` EXE。
+并发布自包含与框架依赖两种单文件 `win-x64` EXE。

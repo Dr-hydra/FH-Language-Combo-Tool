@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FH.LanguageComboTool.Core/FH.LanguageComboTool.Core.csproj" />
+    <Project Path="src/FH.LanguageComboTool.Wpf/FH.LanguageComboTool.Wpf.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FH.LanguageComboTool.Core.Tests/FH.LanguageComboTool.Core.Tests.csproj" />
+  </Folder>
+</Solution>

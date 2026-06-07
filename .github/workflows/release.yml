@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout FH Language Combo Tool
+        uses: actions/checkout@v4
+
+      - name: Checkout QING.UIKIT
+        uses: actions/checkout@v4
+        with:
+          repository: Dr-hydra/QING.UIKIT
+          ref: c71744954b426d523ed97801d544685dccb4a0b6
+          path: external/QING.UIKIT
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Test
+        shell: pwsh
+        run: >
+          dotnet test
+          dotnet/tests/FH.LanguageComboTool.Core.Tests/FH.LanguageComboTool.Core.Tests.csproj
+          --configuration Release
+
+      - name: Publish win-x64
+        shell: pwsh
+        run: >
+          dotnet publish
+          dotnet/src/FH.LanguageComboTool.Wpf/FH.LanguageComboTool.Wpf.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          -p:PublishSingleFile=false
+          -p:QingUiKitRoot="${{ github.workspace }}\external\QING.UIKIT"
+          -o artifacts/win-x64
+
+      - name: Package
+        shell: pwsh
+        run: Compress-Archive -Path artifacts/win-x64/* -DestinationPath FH-Language-Combo-Tool-win-x64.zip
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: FH-Language-Combo-Tool-win-x64.zip
+          generate_release_notes: true

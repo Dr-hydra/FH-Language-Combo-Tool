@@ -1,0 +1,412 @@
+<Window x:Class="FH.LanguageComboTool.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:qing="clr-namespace:QING.UIKIT;assembly=QING.UIKIT"
+        mc:Ignorable="d"
+        Style="{StaticResource MyWindow}"
+        Title="FH 语言组合工具"
+        Width="1040"
+        Height="720"
+        MinWidth="900"
+        MinHeight="620"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResize"
+        Background="{x:Null}">
+    <Grid x:Name="PanBack" Margin="10" SnapsToDevicePixels="True" UseLayoutRounding="True">
+        <Rectangle x:Name="ResizerT" Height="8" VerticalAlignment="Top" Margin="13,0" Cursor="SizeNS" Fill="#01000000" />
+        <Rectangle x:Name="ResizerB" Height="8" VerticalAlignment="Bottom" Margin="13,0" Cursor="SizeNS" Fill="#01000000" />
+        <Rectangle x:Name="ResizerL" Width="8" HorizontalAlignment="Left" Margin="0,13" Cursor="SizeWE" Fill="#01000000" />
+        <Rectangle x:Name="ResizerR" Width="8" HorizontalAlignment="Right" Margin="0,13" Cursor="SizeWE" Fill="#01000000" />
+        <Rectangle x:Name="ResizerLT" Width="13" Height="13" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="SizeNWSE" Fill="#01000000" />
+        <Rectangle x:Name="ResizerLB" Width="13" Height="13" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="SizeNESW" Fill="#01000000" />
+        <Rectangle x:Name="ResizerRT" Width="13" Height="13" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="SizeNESW" Fill="#01000000" />
+        <Rectangle x:Name="ResizerRB" Width="13" Height="13" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" Fill="#01000000" />
+
+        <Border x:Name="BorderForm"
+                Margin="8"
+                CornerRadius="6"
+                Background="{DynamicResource ColorBrushGray8}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="14" ShadowDepth="2" Opacity="0.22" Color="#343d4a" />
+            </Border.Effect>
+            <Grid x:Name="PanForm">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="28" />
+                </Grid.RowDefinitions>
+
+                <Grid x:Name="PanTitle" Background="{DynamicResource ColorBrush4}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                    <TextBlock x:Name="WindowTitleText"
+                               Text="FH 语言组合工具"
+                               Margin="18,0,0,0"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               FontSize="17"
+                               FontWeight="SemiBold"
+                               IsHitTestVisible="False" />
+                    <TextBlock Text="Forza Horizon 5 / 6"
+                               Margin="174,1,0,0"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               FontSize="12"
+                               Opacity="0.72"
+                               IsHitTestVisible="False" />
+
+                    <StackPanel x:Name="TopNavigation"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Height="27">
+                        <qing:MyRadioButton x:Name="NavHome" Text="主页" Tag="0" Checked="True" Margin="5,0" Padding="2,0"
+                                            LogoScale="0.9" Logo="M128 192h768v128H128zM128 448h768v128H128zM128 704h768v128H128z"
+                                            Check="TopNav_Check" />
+                        <qing:MyRadioButton x:Name="NavBackups" Text="备份" Tag="1" Margin="5,0" Padding="2,0"
+                                            LogoScale="0.9" Logo="M128 192h768v640H128zM256 320h512v128H256zM256 576h512v128H256z"
+                                            Check="TopNav_Check" />
+                        <qing:MyRadioButton x:Name="NavSettings" Text="设置" Tag="2" Margin="5,0" Padding="2,0"
+                                            LogoScale="0.9" Logo="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.37-.31-.6-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98L14.5 2.42C14.47 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.5.42L9.12 5.07c-.61.25-1.18.59-1.69.98l-2.49-1c-.23-.08-.48 0-.6.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.08.66-.08.98s.03.66.08.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.37.31.6.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.38-2.65c.61-.25 1.18-.58 1.69-.98l2.49 1c.23.08.48 0 .6-.22l2-3.46c.12-.22.07-.49-.12-.64zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"
+                                            Check="TopNav_Check" />
+                        <qing:MyRadioButton x:Name="NavAbout" Text="关于" Tag="3" Margin="5,0" Padding="2,0"
+                                            LogoScale="0.9" Logo="M448 128h128v128H448zM448 384h128v512H448z"
+                                            Check="TopNav_Check" />
+                    </StackPanel>
+
+                    <qing:MyIconButton x:Name="MinimizeButton"
+                                       HorizontalAlignment="Right"
+                                       Width="28"
+                                       Height="28"
+                                       Margin="0,0,44,0"
+                                       VerticalAlignment="Center"
+                                       Theme="White"
+                                       LogoScale="0.72"
+                                       Logo="F1 M0,0 h15 v2 h-15 v-2 Z"
+                                       Click="Minimize_Click" />
+                    <qing:MyIconButton x:Name="CloseButton"
+                                       HorizontalAlignment="Right"
+                                       Width="28"
+                                       Height="28"
+                                       Margin="0,0,12,0"
+                                       VerticalAlignment="Center"
+                                       Theme="White"
+                                       LogoScale="0.72"
+                                       Logo="F1 M2,0 L0,2 8,10 0,18 2,20 10,12 18,20 20,18 12,10 20,2 18,0 10,8 2,0Z"
+                                       Click="Close_Click" />
+                </Grid>
+
+                <Grid x:Name="MainContent" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0"
+                            Background="{DynamicResource ColorBrushBackgroundTransparentSidebar}"
+                            BorderBrush="#10000000"
+                            BorderThickness="0,0,1,0">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="18,20,18,14">
+                                <qing:MyCard x:Name="GameCard" Title="游戏" Margin="0,0,0,14">
+                                    <StackPanel Margin="16,42,16,16">
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="74" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="InstalledGamesLabel" Text="已安装游戏" VerticalAlignment="Center" />
+                                            <qing:MyButton x:Name="DetectButton" Grid.Column="1" Text="检测" Padding="12,6" ColorType="Highlight" Click="Detect_Click" />
+                                        </Grid>
+                                        <Border Height="112"
+                                                Padding="3"
+                                                CornerRadius="4"
+                                                BorderBrush="{DynamicResource ColorBrushGray6}"
+                                                BorderThickness="1"
+                                                Background="{DynamicResource ColorBrushHalfWhite}">
+                                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                                          HorizontalScrollBarVisibility="Disabled">
+                                                <StackPanel x:Name="GameList" />
+                                            </ScrollViewer>
+                                        </Border>
+                                        <TextBlock x:Name="GamePathText"
+                                                   Text="尚未选择游戏。"
+                                                   Margin="0,9,0,0"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource ColorBrushGray3}"
+                                                   TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </qing:MyCard>
+
+                                <qing:MyCard x:Name="ManualDirectoryCard" Title="手动添加目录">
+                                    <StackPanel Margin="16,42,16,16">
+                                        <qing:MyComboBox x:Name="ManualGameCombo" Height="32" Margin="0,0,0,8">
+                                            <ComboBoxItem Content="Forza Horizon 5" Tag="fh5" IsSelected="True" />
+                                            <ComboBoxItem Content="Forza Horizon 6" Tag="fh6" />
+                                        </qing:MyComboBox>
+                                        <qing:MyTextBox x:Name="ManualPathTextBox"
+                                                       Height="34"
+                                                       HintText="选择游戏根目录"
+                                                       Margin="0,0,0,9" />
+                                        <WrapPanel>
+                                            <qing:MyButton x:Name="BrowseButton" Text="浏览" Padding="15,7" Margin="0,0,10,0" Click="Browse_Click" />
+                                            <qing:MyButton x:Name="ValidateManualButton" Text="验证目录" Padding="15,7" ColorType="Highlight" Click="ValidateManual_Click" />
+                                        </WrapPanel>
+                                    </StackPanel>
+                                </qing:MyCard>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Grid Grid.Column="1">
+                        <qing:MyScrollViewer x:Name="HomeView" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="28,24,28,14">
+                                <qing:MyCard x:Name="LanguageComboCard" Title="语言配置" Margin="0,0,0,15">
+                                    <StackPanel Margin="20,42,20,18">
+                                        <TextBlock x:Name="LanguageComboIntroText"
+                                                   Text="为游戏分别选择语音语言与文字语言。"
+                                                   FontSize="22"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource ColorBrush3}" />
+                                        <TextBlock x:Name="LanguageComboDescriptionText"
+                                                   Text="工具会先备份原始语音包，再将文字语言包覆盖到目标语音包。"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource ColorBrushGray3}"
+                                                   Margin="0,8,0,18" />
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="44" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock x:Name="VoiceLanguageLabel" Text="语音语言" Margin="0,0,0,6" />
+                                                <qing:MyComboBox x:Name="VoiceCombo"
+                                                                 Height="34"
+                                                                 DisplayMemberPath="Display"
+                                                                 SelectionChanged="Language_SelectionChanged" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="→"
+                                                       FontSize="24"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Bottom"
+                                                       Margin="0,0,0,3"
+                                                       Foreground="{DynamicResource ColorBrush4}" />
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock x:Name="TextLanguageLabel" Text="文字语言" Margin="0,0,0,6" />
+                                                <qing:MyComboBox x:Name="TextCombo"
+                                                                 Height="34"
+                                                                 DisplayMemberPath="Display"
+                                                                 SelectionChanged="Language_SelectionChanged" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </qing:MyCard>
+
+                                <qing:MyCard x:Name="StatusCard" Title="状态与预览" Margin="0,0,0,15">
+                                    <StackPanel Margin="20,42,20,18">
+                                        <TextBlock x:Name="CurrentStatusLabel" Text="当前状态" FontWeight="SemiBold" />
+                                        <TextBlock x:Name="StatusText"
+                                                   Text="请选择游戏以加载状态。"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource ColorBrushGray3}"
+                                                   Margin="0,6,0,16" />
+                                        <Separator Margin="0,0,0,14" />
+                                        <TextBlock x:Name="ExpectedOperationLabel" Text="操作预览" FontWeight="SemiBold" />
+                                        <TextBlock x:Name="PreviewText"
+                                                   Text="请选择两个不同的语言。"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource ColorBrushGray3}"
+                                                   Margin="0,6,0,0" />
+                                    </StackPanel>
+                                </qing:MyCard>
+
+                                <qing:MyCard x:Name="ActionsCard" Title="执行操作">
+                                    <WrapPanel Margin="20,42,20,18">
+                                        <qing:MyButton x:Name="ApplyButton" Text="应用配置" Padding="20,9" ColorType="Highlight" Margin="0,0,12,12" Click="Apply_Click" />
+                                        <qing:MyButton x:Name="RefreshStatusButton" Text="刷新状态" Padding="20,9" Margin="0,0,12,12" Click="Refresh_Click" />
+                                        <qing:MyButton x:Name="ReapplyButton" Text="重新应用" Padding="20,9" ColorType="Highlight" Margin="0,0,12,12" IsEnabled="False" Click="Reapply_Click" />
+                                    </WrapPanel>
+                                </qing:MyCard>
+                            </StackPanel>
+                        </qing:MyScrollViewer>
+
+                        <qing:MyScrollViewer x:Name="BackupView" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="28,24,28,14">
+                                <qing:MyCard x:Name="BackupsCard" Title="备份与恢复">
+                                    <StackPanel Margin="20,42,20,18">
+                                        <TextBlock x:Name="BackupsDescriptionText"
+                                                   Text="选择一个有效备份，将游戏语言资源恢复到修改前状态。"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource ColorBrushGray3}"
+                                                   Margin="0,0,0,14" />
+                                        <Border MinHeight="250"
+                                                Padding="4"
+                                                CornerRadius="4"
+                                                BorderBrush="{DynamicResource ColorBrushGray6}"
+                                                BorderThickness="1"
+                                                Background="{DynamicResource ColorBrushHalfWhite}">
+                                            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                                          HorizontalScrollBarVisibility="Disabled">
+                                                <StackPanel x:Name="BackupList" />
+                                            </ScrollViewer>
+                                        </Border>
+                                        <qing:MyButton x:Name="RestoreButton"
+                                                       Text="恢复所选备份"
+                                                       Padding="20,9"
+                                                       ColorType="Red"
+                                                       HorizontalAlignment="Left"
+                                                       Margin="0,16,0,0"
+                                                       Click="Restore_Click" />
+                                    </StackPanel>
+                                </qing:MyCard>
+                            </StackPanel>
+                        </qing:MyScrollViewer>
+
+                        <qing:MyScrollViewer x:Name="SettingsView" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="28,24,28,14">
+                                <qing:MyCard x:Name="SettingsCard" Title="设置">
+                                    <StackPanel Margin="20,42,20,18">
+                                        <TextBlock x:Name="InterfaceLanguageLabel"
+                                                   Text="界面语言"
+                                                   FontWeight="SemiBold"
+                                                   Margin="0,0,0,7" />
+                                        <qing:MyComboBox x:Name="SettingsLanguageCombo"
+                                                         Height="34"
+                                                         DisplayMemberPath="Display"
+                                                         SelectionChanged="SettingsLanguageCombo_SelectionChanged"
+                                                         Margin="0,0,0,16" />
+                                        <TextBlock x:Name="SettingsDescriptionText"
+                                                   Text="可在此切换界面语言或重置首次启动状态。"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource ColorBrushGray3}"
+                                                   Margin="0,0,0,16" />
+                                        <qing:MyButton x:Name="ResetFirstRunButton"
+                                                       Text="重置首次启动提示"
+                                                       Padding="20,9"
+                                                       HorizontalAlignment="Left"
+                                                       Click="ResetFirstRun_Click" />
+                                    </StackPanel>
+                                </qing:MyCard>
+                            </StackPanel>
+                        </qing:MyScrollViewer>
+
+                        <qing:MyScrollViewer x:Name="AboutView" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <StackPanel Margin="28,24,28,14">
+                                <qing:MyCard x:Name="AboutCard" Title="关于 FH 语言组合工具">
+                                    <StackPanel Margin="20,42,20,18">
+                                        <TextBlock x:Name="AboutProductNameText"
+                                                   Text="FH 语言组合工具"
+                                                   FontSize="24"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource ColorBrush3}" />
+                                        <TextBlock Text=".NET 10 WPF / QING.UIKIT"
+                                                   Foreground="{DynamicResource ColorBrushGray3}"
+                                                   Margin="0,6,0,16" />
+                                        <TextBlock x:Name="AboutDescriptionText"
+                                                   Text="用于在 Steam 版 Forza Horizon 5 / 6 中组合不同的语音语言与文字语言。核心逻辑位于独立的 .NET 服务层，所有文件修改前都会创建备份。"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,0,0,18" />
+                                        <Grid Margin="0,0,0,9">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="VersionLabelText" Text="版本" FontWeight="SemiBold" />
+                                            <TextBlock x:Name="VersionText" Grid.Column="1" />
+                                        </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock x:Name="ProjectLinkLabelText" Text="项目地址" FontWeight="SemiBold" />
+                                            <TextBlock Grid.Column="1">
+                                                <Hyperlink NavigateUri="https://github.com/Dr-hydra/FH-Language-Combo-Tool"
+                                                           RequestNavigate="ProjectLink_RequestNavigate">
+                                                    github.com/Dr-hydra/FH-Language-Combo-Tool
+                                                </Hyperlink>
+                                            </TextBlock>
+                                        </Grid>
+                                    </StackPanel>
+                                </qing:MyCard>
+                            </StackPanel>
+                        </qing:MyScrollViewer>
+                    </Grid>
+                </Grid>
+
+                <Border Grid.Row="2" Background="#ebf2ff">
+                    <TextBlock x:Name="FooterText"
+                               Text="就绪。"
+                               VerticalAlignment="Center"
+                               Margin="18,0"
+                               FontSize="11"
+                               Foreground="{DynamicResource ColorBrushGray3}" />
+                </Border>
+
+                <Grid x:Name="PanHint" Grid.RowSpan="3" IsHitTestVisible="False" />
+                <Grid x:Name="PanMsg" Grid.RowSpan="3" Background="#00000000" Visibility="Collapsed" />
+            </Grid>
+        </Border>
+
+        <Border x:Name="FirstRunOverlay"
+                Margin="8"
+                CornerRadius="6"
+                Background="{DynamicResource ColorBrushGray8}"
+                Visibility="Collapsed"
+                Panel.ZIndex="20">
+            <Grid>
+                <qing:MyCard x:Name="LanguagePanel"
+                             Title="界面语言"
+                             Width="460"
+                             MinHeight="260"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             Visibility="Collapsed">
+                    <StackPanel Margin="22,52,22,22">
+                        <TextBlock x:Name="LanguageIntroText"
+                                   Text="本工具界面使用简体中文。"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,14" />
+                        <ListBox x:Name="UiLanguageList"
+                                 Height="90"
+                                 DisplayMemberPath="Display"
+                                 SelectionChanged="UiLanguageList_SelectionChanged" />
+                        <qing:MyButton x:Name="ContinueLanguageButton"
+                                       Text="继续"
+                                       Padding="20,9"
+                                       Margin="0,14,0,0"
+                                       HorizontalAlignment="Left"
+                                       ColorType="Highlight"
+                                       Click="ContinueLanguage_Click" />
+                    </StackPanel>
+                </qing:MyCard>
+
+                <qing:MyCard x:Name="DisclaimerPanel"
+                             Title="使用前确认"
+                             Width="620"
+                             MinHeight="430"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
+                             Visibility="Collapsed">
+                    <StackPanel Margin="22,52,22,22">
+                        <TextBlock x:Name="DisclaimerIntroText" TextWrapping="Wrap" Margin="0,0,0,14" />
+                        <qing:MyCheckBox x:Name="DisclaimerCheck1" Margin="0,0,0,10" Change="DisclaimerCheck_Changed" />
+                        <qing:MyCheckBox x:Name="DisclaimerCheck2" Margin="0,0,0,10" Change="DisclaimerCheck_Changed" />
+                        <qing:MyCheckBox x:Name="DisclaimerCheck3" Margin="0,0,0,10" Change="DisclaimerCheck_Changed" />
+                        <qing:MyCheckBox x:Name="DisclaimerCheck4" Margin="0,0,0,18" Change="DisclaimerCheck_Changed" />
+                        <qing:MyButton x:Name="AcceptDisclaimerButton"
+                                       Text="接受并继续"
+                                       Padding="20,9"
+                                       ColorType="Highlight"
+                                       IsEnabled="False"
+                                       Click="AcceptDisclaimer_Click" />
+                    </StackPanel>
+                </qing:MyCard>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <Version>1.2.0</Version>
+    <QingUiKitRoot Condition="'$(QingUiKitRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..\..\QING.UIKIT</QingUiKitRoot>
+    <QingUiKitProject>$(QingUiKitRoot)\src\QING.UIKIT\QING.UIKIT.vbproj</QingUiKitProject>
+    <QingUiKitOutput>$(QingUiKitRoot)\src\QING.UIKIT\bin\$(Configuration)\net10.0-windows</QingUiKitOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FH.LanguageComboTool.Core\FH.LanguageComboTool.Core.csproj" />
+    <ProjectReference Include="$(QingUiKitRoot)\src\QING.Core\Shared\QING.Core.csproj" />
+    <ProjectReference Include="$(QingUiKitRoot)\src\QING.Core\Wpf\QING.Core.Wpf.csproj" />
+    <Reference Include="QING.UIKIT">
+      <HintPath>$(QingUiKitOutput)\QING.UIKIT.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="BuildQingUiKit" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="!Exists('$(QingUiKitProject)')"
+           Text="找不到 QING.UIKIT 项目：$(QingUiKitProject)。请设置 QingUiKitRoot MSBuild 属性。" />
+    <MSBuild Projects="$(QingUiKitProject)"
+             Targets="Build"
+             Properties="Configuration=$(Configuration)"
+             RemoveProperties="RuntimeIdentifier;SelfContained;PublishSingleFile;PublishReadyToRun" />
+    <Error Condition="!Exists('$(QingUiKitOutput)\QING.UIKIT.dll')"
+           Text="QING.UIKIT 构建后未生成程序集：$(QingUiKitOutput)\QING.UIKIT.dll" />
+  </Target>
+
+</Project>

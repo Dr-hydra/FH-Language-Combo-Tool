@@ -1,0 +1,25 @@
+bin/
+obj/
+**/bin/
+**/obj/
+*.exe
+*.pdb
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Prototype
+ui_prototype.html
+
+# Logs
+*.log
+
+# Local verification artifacts
+/artifacts/

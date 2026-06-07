@@ -16,6 +16,8 @@ All notable changes to FH Language Combo Tool are documented here.
 - Detection of applied, restored, outdated, externally modified, duplicated,
   and JP/CHS externally swapped language packs.
 - Self-contained `win-x64` release workflow.
+- Compressed single-file executable release with only English and Simplified
+  Chinese framework resources.
 
 ### Safety
 

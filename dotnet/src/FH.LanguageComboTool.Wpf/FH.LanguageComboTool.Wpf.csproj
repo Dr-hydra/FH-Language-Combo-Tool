@@ -33,4 +33,13 @@
            Text="QING.UIKIT 构建后未生成程序集：$(QingUiKitOutput)\QING.UIKIT.dll" />
   </Target>
 
+  <Target Name="RemovePublishedSymbols"
+          AfterTargets="Publish"
+          Condition="'$(PublishSingleFile)' == 'true'">
+    <ItemGroup>
+      <PublishedSymbols Include="$(PublishDir)*.pdb" />
+    </ItemGroup>
+    <Delete Files="@(PublishedSymbols)" />
+  </Target>
+
 </Project>

@@ -7,8 +7,8 @@ FH 语言组合工具用于在 Steam 版《Forza Horizon 5 / 6》中分别选择
 
 ## 下载
 
-从本项目 Releases 页面下载 `FH-Language-Combo-Tool-win-x64.zip`，解压后运行
-`FH.LanguageComboTool.Wpf.exe`。
+从本项目 Releases 页面下载并运行
+`FH-Language-Combo-Tool-win-x64.exe`，无需安装 .NET 运行时。
 
 ## 首次启动
 

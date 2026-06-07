@@ -44,8 +44,10 @@ dotnet test .\dotnet\tests\FH.LanguageComboTool.Core.Tests\FH.LanguageComboTool.
 
 ```powershell
 dotnet publish .\dotnet\src\FH.LanguageComboTool.Wpf\FH.LanguageComboTool.Wpf.csproj `
-  -p:PublishProfile=win-x64-folder
+  -p:PublishProfile=win-x64-single-file
 ```
+
+发布结果为单个自包含 EXE，不需要额外安装 .NET 运行时。
 
 ## 功能
 

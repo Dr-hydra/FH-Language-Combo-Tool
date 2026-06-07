@@ -42,16 +42,26 @@ jobs:
           --configuration Release
           --runtime win-x64
           --self-contained true
-          -p:PublishSingleFile=false
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:PublishTrimmed=false
+          -p:SatelliteResourceLanguages=en%3Bzh-Hans
+          -p:DebugType=none
+          -p:DebugSymbols=false
+          -p:CopyOutputSymbolsToPublishDirectory=false
           -p:QingUiKitRoot="${{ github.workspace }}\external\QING.UIKIT"
           -o artifacts/win-x64
 
-      - name: Package
+      - name: Rename executable
         shell: pwsh
-        run: Compress-Archive -Path artifacts/win-x64/* -DestinationPath FH-Language-Combo-Tool-win-x64.zip
+        run: >
+          Move-Item
+          artifacts/win-x64/FH.LanguageComboTool.Wpf.exe
+          FH-Language-Combo-Tool-win-x64.exe
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: FH-Language-Combo-Tool-win-x64.zip
+          files: FH-Language-Combo-Tool-win-x64.exe
           generate_release_notes: true

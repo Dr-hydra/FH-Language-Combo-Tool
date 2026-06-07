@@ -8,8 +8,8 @@ and English interfaces.
 
 ## Download
 
-Download `FH-Language-Combo-Tool-win-x64.zip` from this project's Releases
-page, extract it, and run `FH.LanguageComboTool.Wpf.exe`.
+Download and run `FH-Language-Combo-Tool-win-x64.exe` from this project's
+Releases page. The .NET runtime does not need to be installed separately.
 
 ## First Run
 

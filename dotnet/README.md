@@ -31,5 +31,8 @@ dotnet run --project .\src\FH.LanguageComboTool.Wpf\FH.LanguageComboTool.Wpf.csp
 
 ```powershell
 dotnet publish .\src\FH.LanguageComboTool.Wpf\FH.LanguageComboTool.Wpf.csproj `
-  -p:PublishProfile=win-x64-folder
+  -p:PublishProfile=win-x64-single-file
 ```
+
+The result is one self-contained executable. Native runtime components are
+extracted automatically when the application starts.

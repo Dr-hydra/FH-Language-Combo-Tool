@@ -99,10 +99,19 @@ jobs:
             FH-Language-Combo-Tool-win-x64-self-contained.exe
             FH-Language-Combo-Tool-win-x64-framework-dependent.exe
           body: |
-            ## Downloads
+            ## 本次更新
 
-            - **Self-contained**: no .NET installation required.
-            - **Framework-dependent**: smaller download; requires the .NET 10 Desktop Runtime x64.
+            - 修正 Xbox 版《Forza Horizon 6》安装目录识别方式。
+            - 移除对固定 `XboxGames\Forza Horizon 6` 路径的依赖。
+            - Xbox 版改为由用户选择 `Forza Horizon 6 (Xbox)` 并手动指定实际安装目录。
+            - 软件会验证游戏可执行文件、`StringTables` 资源目录及语言包数量。
+            - 支持资源文件直接位于游戏根目录或 `Content` 子目录。
+            - 优化 Xbox 版额外语言包下载提示。
 
-            Both files are single-executable Windows x64 builds.
-          generate_release_notes: true
+            ## 下载说明
+
+            - **自包含版**：无需安装 .NET 运行时，推荐普通用户使用。
+            - **框架依赖版**：体积更小，需要安装 .NET 10 Desktop Runtime x64。
+
+            两个文件均为 Windows x64 单文件程序。
+          generate_release_notes: false

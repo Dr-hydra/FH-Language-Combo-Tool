@@ -229,7 +229,7 @@ public partial class MainWindow : Window
         RunUi(_localization.T("DetectingGames"), () =>
         {
             _games.Clear();
-            foreach (var profile in _gameDetector.DetectGames())
+            foreach (var profile in _gameDetector.DetectSteamGames())
                 _games.Add(new GameOption(profile));
 
             PopulateGameList();
@@ -317,10 +317,17 @@ public partial class MainWindow : Window
 
         RunUi(_localization.T("ValidatingDirectory"), () =>
         {
-            var gameId = GetManualGameId();
-            var profile = _gameDetector.ValidateGameDirectory(path, gameId);
+            var selection = GetManualGameSelection();
+            var profile = _gameDetector.ValidateGameDirectory(
+                path,
+                selection.GameId,
+                selection.Channel);
             var existing = _games.FindIndex(game =>
                 game.Profile.GameId == profile.GameId &&
+                string.Equals(
+                    game.Profile.Channel,
+                    profile.Channel,
+                    StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(game.Profile.RootPath, profile.RootPath, StringComparison.OrdinalIgnoreCase));
 
             if (existing < 0)
@@ -639,11 +646,16 @@ public partial class MainWindow : Window
         ReapplyButton.IsEnabled = false;
     }
 
-    private GameId GetManualGameId()
+    private ManualGameSelection GetManualGameSelection()
     {
         if (ManualGameCombo.SelectedItem is ComboBoxItem item && item.Tag is string tag)
-            return GameDetector.ParseWireId(tag);
-        return GameId.Fh5;
+        {
+            var parts = tag.Split(':', 2);
+            if (parts.Length == 2)
+                return new(GameDetector.ParseWireId(parts[0]), parts[1]);
+        }
+
+        return new(GameId.Fh5, GameDetector.SteamChannel);
     }
 
     private void PopulateGameList()
@@ -711,7 +723,7 @@ public partial class MainWindow : Window
         var informational = assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion;
-        return (informational?.Split('+')[0] ?? assembly.GetName().Version?.ToString(3) ?? "2.1.0");
+        return (informational?.Split('+')[0] ?? assembly.GetName().Version?.ToString(3) ?? "2.1.1");
     }
 
     private void SelectGameItem(int index)
@@ -797,4 +809,6 @@ public partial class MainWindow : Window
     private sealed record LanguageOption(LanguagePack Pack, string Display);
 
     private sealed record BackupOption(BackupInfo Info, string Title, string Detail);
+
+    private sealed record ManualGameSelection(GameId GameId, string Channel);
 }

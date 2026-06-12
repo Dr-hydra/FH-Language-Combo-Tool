@@ -2,6 +2,15 @@
 
 All notable changes to FH Language Combo Tool are documented here.
 
+## [2.1.1] - 2026-06-13
+
+### Changed
+
+- Removed fixed-path Xbox FH6 discovery because Xbox App installations can
+  use custom locations.
+- Xbox FH6 is now added by selecting the Xbox channel and validating the
+  user-provided installation directory.
+
 ## [2.1.0] - 2026-06-12
 
 ### Added
@@ -42,5 +51,6 @@ All notable changes to FH Language Combo Tool are documented here.
 - Prevents externally modified files without a valid backup from being
   overwritten automatically.
 
+[2.1.1]: https://github.com/Dr-hydra/FH-Language-Combo-Tool/releases/tag/v2.1.1
 [2.1.0]: https://github.com/Dr-hydra/FH-Language-Combo-Tool/releases/tag/v2.1.0
 [1.2.0]: https://github.com/Dr-hydra/FH-Language-Combo-Tool/releases/tag/v1.2.0

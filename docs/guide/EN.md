@@ -26,7 +26,8 @@ The interface language can be changed later from **Settings**.
 
 ## Apply a Combination
 
-1. Let the tool detect the Steam or Xbox installation, or add the game
+1. Let the tool detect Steam installations automatically. For the Xbox
+   version, select `Forza Horizon 6 (Xbox)` and specify its actual installation
    directory manually.
 2. Choose a voice language.
 3. Choose a text language.
@@ -49,7 +50,7 @@ Backups with invalid paths or SHA-256 mismatches cannot be restored.
 - The Xbox version of FH6 initially includes only Chinese and English language
   packs. To download another language, launch the game, select that language
   in the in-game settings, wait for the download to finish, close the game,
-  and select **Detect** in the tool.
+  and validate the installation directory again in the tool.
 - Game updates, Steam file verification, or Xbox App repairs may overwrite
   modifications.
 - The tool does not modify executables, save files, network data, or

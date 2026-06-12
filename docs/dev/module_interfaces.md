@@ -4,8 +4,9 @@
 
 ### GameDetector
 
-读取 Steam 注册表路径和 `libraryfolders.vdf` 检测 FH5 / FH6，同时扫描
-各盘符的 `XboxGames\Forza Horizon 6`，并验证手动选择的游戏目录。
+读取 Steam 注册表路径和 `libraryfolders.vdf` 自动检测 FH5 / FH6。Xbox
+版 FH6 由用户明确选择渠道并指定安装目录，模块校验可执行文件、资源目录和
+语言包数量，不依赖固定安装路径。
 
 ### ResourceScanner
 

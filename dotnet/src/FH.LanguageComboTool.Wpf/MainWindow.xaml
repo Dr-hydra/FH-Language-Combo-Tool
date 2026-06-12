@@ -143,8 +143,9 @@
                                 <qing:MyCard x:Name="ManualDirectoryCard" Title="手动添加目录">
                                     <StackPanel Margin="16,42,16,16">
                                         <qing:MyComboBox x:Name="ManualGameCombo" Height="32" Margin="0,0,0,8">
-                                            <ComboBoxItem Content="Forza Horizon 5" Tag="fh5" IsSelected="True" />
-                                            <ComboBoxItem Content="Forza Horizon 6" Tag="fh6" />
+                                            <ComboBoxItem Content="Forza Horizon 5 (Steam)" Tag="fh5:steam" IsSelected="True" />
+                                            <ComboBoxItem Content="Forza Horizon 6 (Steam)" Tag="fh6:steam" />
+                                            <ComboBoxItem Content="Forza Horizon 6 (Xbox)" Tag="fh6:xbox" />
                                         </qing:MyComboBox>
                                         <qing:MyTextBox x:Name="ManualPathTextBox"
                                                        Height="34"

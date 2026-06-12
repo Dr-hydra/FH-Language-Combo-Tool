@@ -83,35 +83,59 @@ public sealed class CoreServiceTests
     }
 
     [TestMethod]
-    public void GameDetectorFindsFh6InXboxGamesDirectory()
+    public void GameDetectorValidatesXboxFh6AtCustomDirectory()
     {
         using var temp = TestDirectory.Create();
-        var installRoot = CreateXboxGame(temp.Path, useContentDirectory: false);
+        var installRoot = CreateXboxGame(
+            Path.Combine(temp.Path, "Custom Games", "My FH6 Install"),
+            useContentDirectory: false);
 
-        var games = new GameDetector().DetectXboxGames([temp.Path]);
+        var profile = new GameDetector().ValidateGameDirectory(
+            installRoot,
+            GameId.Fh6,
+            GameDetector.XboxChannel);
 
-        Assert.HasCount(1, games);
-        Assert.AreEqual(GameId.Fh6, games[0].GameId);
-        Assert.AreEqual(GameDetector.XboxChannel, games[0].Channel);
-        Assert.AreEqual("", games[0].SteamAppId);
-        Assert.AreEqual(installRoot, games[0].RootPath);
-        Assert.IsNull(games[0].ManifestPath);
+        Assert.AreEqual(GameId.Fh6, profile.GameId);
+        Assert.AreEqual(GameDetector.XboxChannel, profile.Channel);
+        Assert.AreEqual("", profile.SteamAppId);
+        Assert.AreEqual(installRoot, profile.RootPath);
+        Assert.IsNull(profile.ManifestPath);
     }
 
     [TestMethod]
-    public void GameDetectorSupportsXboxContentSubdirectoryAndManualInference()
+    public void GameDetectorSupportsXboxContentSubdirectoryAtCustomDirectory()
     {
         using var temp = TestDirectory.Create();
-        var contentRoot = CreateXboxGame(temp.Path, useContentDirectory: true);
+        var contentRoot = CreateXboxGame(
+            Path.Combine(temp.Path, "Library", "Racing", "FH6"),
+            useContentDirectory: true);
         var installRoot = Directory.GetParent(contentRoot)!.FullName;
 
-        var profile = new GameDetector().ValidateGameDirectory(installRoot, GameId.Fh6);
+        var profile = new GameDetector().ValidateGameDirectory(
+            installRoot,
+            GameId.Fh6,
+            GameDetector.XboxChannel);
 
         Assert.AreEqual(GameDetector.XboxChannel, profile.Channel);
         Assert.AreEqual(contentRoot, profile.RootPath);
         Assert.AreEqual(
             Path.Combine(contentRoot, GameDetector.ResourceSubpath),
             profile.ResourcePath);
+    }
+
+    [TestMethod]
+    public void GameDetectorRejectsInvalidXboxCustomDirectory()
+    {
+        using var temp = TestDirectory.Create();
+        var installRoot = Directory.CreateDirectory(
+            Path.Combine(temp.Path, "Custom Xbox Install")).FullName;
+        File.WriteAllText(Path.Combine(installRoot, GameDetector.Fh6Executable), "");
+
+        Assert.ThrowsExactly<DirectoryNotFoundException>(() =>
+            new GameDetector().ValidateGameDirectory(
+                installRoot,
+                GameId.Fh6,
+                GameDetector.XboxChannel));
     }
 
     [TestMethod]
@@ -538,12 +562,9 @@ public sealed class CoreServiceTests
         File.WriteAllText(Path.Combine(resource, "CHS.zip"), "chinese");
     }
 
-    private static string CreateXboxGame(string driveRoot, bool useContentDirectory)
+    private static string CreateXboxGame(string installPath, bool useContentDirectory)
     {
-        var installRoot = Directory.CreateDirectory(Path.Combine(
-            driveRoot,
-            GameDetector.XboxGamesDirectory,
-            GameDetector.Fh6XboxInstallDirectory)).FullName;
+        var installRoot = Directory.CreateDirectory(installPath).FullName;
         var gameRoot = useContentDirectory
             ? Directory.CreateDirectory(Path.Combine(installRoot, "Content")).FullName
             : installRoot;

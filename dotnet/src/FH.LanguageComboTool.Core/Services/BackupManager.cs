@@ -5,7 +5,7 @@ namespace FH.LanguageComboTool.Core.Services;
 
 public sealed class BackupManager
 {
-    public const string ToolVersion = "2.1.0";
+    public const string ToolVersion = "2.1.1";
 
     public string GetBackupRoot()
     {

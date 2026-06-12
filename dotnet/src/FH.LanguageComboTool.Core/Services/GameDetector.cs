@@ -11,18 +11,7 @@ public sealed class GameDetector
     public const string Fh6SteamAppId = "2483190";
     public const string Fh5Executable = "ForzaHorizon5.exe";
     public const string Fh6Executable = "forzahorizon6.exe";
-    public const string XboxGamesDirectory = "XboxGames";
-    public const string Fh6XboxInstallDirectory = "Forza Horizon 6";
     public const string ResourceSubpath = @"media\Stripped\StringTables";
-
-    public IReadOnlyList<GameProfile> DetectGames() =>
-        DetectSteamGames()
-            .Concat(DetectXboxGames())
-            .GroupBy(
-                profile => $"{profile.Channel}|{profile.RootPath}",
-                StringComparer.OrdinalIgnoreCase)
-            .Select(group => group.First())
-            .ToList();
 
     public IReadOnlyList<GameProfile> DetectSteamGames()
     {
@@ -86,43 +75,18 @@ public sealed class GameDetector
         return profiles;
     }
 
-    public IReadOnlyList<GameProfile> DetectXboxGames() =>
-        DetectXboxGames(Directory.GetLogicalDrives());
-
-    public IReadOnlyList<GameProfile> DetectXboxGames(IEnumerable<string> driveRoots)
-    {
-        var profiles = new List<GameProfile>();
-        foreach (var driveRoot in driveRoots.Where(root => !string.IsNullOrWhiteSpace(root)))
-        {
-            try
-            {
-                var installPath = Path.Combine(
-                    driveRoot,
-                    XboxGamesDirectory,
-                    Fh6XboxInstallDirectory);
-                if (!Directory.Exists(installPath))
-                    continue;
-
-                profiles.Add(ValidateGameDirectory(installPath, GameId.Fh6, XboxChannel));
-            }
-            catch
-            {
-                // Ignore inaccessible or incomplete Xbox installations and keep scanning drives.
-            }
-        }
-
-        return profiles
-            .GroupBy(profile => profile.RootPath, StringComparer.OrdinalIgnoreCase)
-            .Select(group => group.First())
-            .ToList();
-    }
-
-    public GameProfile ValidateGameDirectory(string path, GameId gameId, string? channel = null)
+    public GameProfile ValidateGameDirectory(
+        string path,
+        GameId gameId,
+        string channel = SteamChannel)
     {
         RejectDangerousPath(path);
 
         var requestedRoot = Path.GetFullPath(path);
-        channel ??= InferChannel(requestedRoot, gameId);
+        if (!channel.Equals(SteamChannel, StringComparison.OrdinalIgnoreCase) &&
+            !channel.Equals(XboxChannel, StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException($"未知游戏渠道：{channel}", nameof(channel));
+
         if (channel.Equals(XboxChannel, StringComparison.OrdinalIgnoreCase) && gameId != GameId.Fh6)
             throw new InvalidOperationException("Xbox 版目前仅支持 Forza Horizon 6。");
 
@@ -204,23 +168,6 @@ public sealed class GameDetector
         GameId.Fh6 => "Forza Horizon 6",
         _ => throw new ArgumentOutOfRangeException(nameof(gameId), gameId, null)
     };
-
-    private static string InferChannel(string path, GameId gameId)
-    {
-        if (gameId != GameId.Fh6)
-            return SteamChannel;
-
-        var directory = new DirectoryInfo(path.TrimEnd(
-            Path.DirectorySeparatorChar,
-            Path.AltDirectorySeparatorChar));
-        if (directory.Name.Equals("Content", StringComparison.OrdinalIgnoreCase))
-            directory = directory.Parent ?? directory;
-
-        return directory.Name.Equals(Fh6XboxInstallDirectory, StringComparison.OrdinalIgnoreCase) &&
-               directory.Parent?.Name.Equals(XboxGamesDirectory, StringComparison.OrdinalIgnoreCase) == true
-            ? XboxChannel
-            : SteamChannel;
-    }
 
     private static string? ReadSteamPath()
     {

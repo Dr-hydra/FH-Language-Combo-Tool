@@ -63,8 +63,7 @@ dotnet publish .\dotnet\src\FH.LanguageComboTool.Wpf\FH.LanguageComboTool.Wpf.cs
 ## 功能
 
 - 自动检测 Steam 版 FH5 / FH6
-- 自动检测各安装盘 `XboxGames\Forza Horizon 6` 下的 Xbox 版 FH6
-- 手动验证游戏目录
+- 手动选择并验证任意安装位置的 Xbox 版 FH6
 - 扫描 StringTables 语言包
 - 分别选择语音语言与文字语言
 - 修改前自动创建 SHA-256 校验备份

@@ -24,6 +24,8 @@ public partial class MainWindow : Window
     private readonly WindowResizer _resizer;
 
     private readonly List<GameOption> _games = [];
+    private readonly HashSet<string> _shownXboxLanguagePackNotices =
+        new(StringComparer.OrdinalIgnoreCase);
     private IReadOnlyList<LanguagePack> _languagePacks = [];
     private GameProfile? _selectedGame;
     private BackupOption? _selectedBackup;
@@ -227,7 +229,7 @@ public partial class MainWindow : Window
         RunUi(_localization.T("DetectingGames"), () =>
         {
             _games.Clear();
-            foreach (var profile in _gameDetector.DetectSteamGames())
+            foreach (var profile in _gameDetector.DetectGames())
                 _games.Add(new GameOption(profile));
 
             PopulateGameList();
@@ -239,7 +241,7 @@ public partial class MainWindow : Window
             }
             else
             {
-                FooterText.Text = _localization.T("NoSteamDetected");
+                FooterText.Text = _localization.T("NoGamesDetected");
                 ClearGameDetails();
             }
         });
@@ -263,6 +265,7 @@ public partial class MainWindow : Window
         {
             _languagePacks = ResourceScanner.ScanStringTables(profile.ResourcePath);
             PopulateLanguageSelectors();
+            ShowXboxLanguagePackNotice(profile);
 
             RefreshStatus();
             RefreshBackups();
@@ -273,6 +276,19 @@ public partial class MainWindow : Window
             StatusText.Text = _localization.Format("ScanFailed", ex.Message);
             FooterText.Text = _localization.T("LanguageScanFailed");
         }
+    }
+
+    private void ShowXboxLanguagePackNotice(GameProfile profile)
+    {
+        if (!profile.Channel.Equals(GameDetector.XboxChannel, StringComparison.OrdinalIgnoreCase) ||
+            !_shownXboxLanguagePackNotices.Add(profile.RootPath))
+            return;
+
+        QingDialog.Show(
+            this,
+            _localization.T("XboxLanguagePackNotice"),
+            _localization.T("XboxLanguagePackNoticeTitle"),
+            kind: QingDialogKind.Information);
     }
 
     private void Browse_Click(object sender, MouseButtonEventArgs e)
@@ -695,7 +711,7 @@ public partial class MainWindow : Window
         var informational = assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion;
-        return (informational?.Split('+')[0] ?? assembly.GetName().Version?.ToString(3) ?? "1.2.0");
+        return (informational?.Split('+')[0] ?? assembly.GetName().Version?.ToString(3) ?? "2.1.0");
     }
 
     private void SelectGameItem(int index)
@@ -773,6 +789,8 @@ public partial class MainWindow : Window
     {
         public string ChannelDisplay => Profile.Channel.Equals("steam", StringComparison.OrdinalIgnoreCase)
             ? "Steam"
+            : Profile.Channel.Equals("xbox", StringComparison.OrdinalIgnoreCase)
+                ? "Xbox"
             : Profile.Channel;
     }
 

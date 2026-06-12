@@ -1,7 +1,8 @@
 # FH Language Combo Tool
 
-FH Language Combo Tool 是一个面向 Windows 的《Forza Horizon 5 / 6》Steam
-版语言组合工具，可分别选择语音语言与文字语言。
+FH Language Combo Tool 是一个面向 Windows 的《Forza Horizon 5 / 6》语言
+组合工具，可分别选择语音语言与文字语言。支持 Steam 版 FH5 / FH6 与 Xbox
+版 FH6。
 
 应用基于 `.NET 10 WPF`，界面直接使用
 [QING.UIKIT](https://github.com/Dr-hydra/QING.UIKIT)。
@@ -62,6 +63,7 @@ dotnet publish .\dotnet\src\FH.LanguageComboTool.Wpf\FH.LanguageComboTool.Wpf.cs
 ## 功能
 
 - 自动检测 Steam 版 FH5 / FH6
+- 自动检测各安装盘 `XboxGames\Forza Horizon 6` 下的 Xbox 版 FH6
 - 手动验证游戏目录
 - 扫描 StringTables 语言包
 - 分别选择语音语言与文字语言
@@ -70,6 +72,7 @@ dotnet publish .\dotnet\src\FH.LanguageComboTool.Wpf\FH.LanguageComboTool.Wpf.cs
 - 识别已应用、已恢复、需要重新应用及外部修改状态
 - 游戏运行时阻止危险操作
 - 同步 Steam appmanifest 与 `UserPreferredLang`
+- Xbox 版缺少目标语言包时提示先在游戏内切换语言并等待自动下载
 - 简体中文与英文界面，可在首次启动或设置页切换
 
 ## 免责声明

@@ -83,6 +83,38 @@ public sealed class CoreServiceTests
     }
 
     [TestMethod]
+    public void GameDetectorFindsFh6InXboxGamesDirectory()
+    {
+        using var temp = TestDirectory.Create();
+        var installRoot = CreateXboxGame(temp.Path, useContentDirectory: false);
+
+        var games = new GameDetector().DetectXboxGames([temp.Path]);
+
+        Assert.HasCount(1, games);
+        Assert.AreEqual(GameId.Fh6, games[0].GameId);
+        Assert.AreEqual(GameDetector.XboxChannel, games[0].Channel);
+        Assert.AreEqual("", games[0].SteamAppId);
+        Assert.AreEqual(installRoot, games[0].RootPath);
+        Assert.IsNull(games[0].ManifestPath);
+    }
+
+    [TestMethod]
+    public void GameDetectorSupportsXboxContentSubdirectoryAndManualInference()
+    {
+        using var temp = TestDirectory.Create();
+        var contentRoot = CreateXboxGame(temp.Path, useContentDirectory: true);
+        var installRoot = Directory.GetParent(contentRoot)!.FullName;
+
+        var profile = new GameDetector().ValidateGameDirectory(installRoot, GameId.Fh6);
+
+        Assert.AreEqual(GameDetector.XboxChannel, profile.Channel);
+        Assert.AreEqual(contentRoot, profile.RootPath);
+        Assert.AreEqual(
+            Path.Combine(contentRoot, GameDetector.ResourceSubpath),
+            profile.ResourcePath);
+    }
+
+    [TestMethod]
     public void LanguageMapperResolvesFilesCaseInsensitivelyAndBuildsPlan()
     {
         using var temp = TestDirectory.Create();
@@ -504,6 +536,24 @@ public sealed class CoreServiceTests
             Path.Combine(gameRoot, GameDetector.ResourceSubpath)).FullName;
         File.WriteAllText(Path.Combine(resource, "EN.zip"), "english");
         File.WriteAllText(Path.Combine(resource, "CHS.zip"), "chinese");
+    }
+
+    private static string CreateXboxGame(string driveRoot, bool useContentDirectory)
+    {
+        var installRoot = Directory.CreateDirectory(Path.Combine(
+            driveRoot,
+            GameDetector.XboxGamesDirectory,
+            GameDetector.Fh6XboxInstallDirectory)).FullName;
+        var gameRoot = useContentDirectory
+            ? Directory.CreateDirectory(Path.Combine(installRoot, "Content")).FullName
+            : installRoot;
+
+        File.WriteAllText(Path.Combine(gameRoot, GameDetector.Fh6Executable), "");
+        var resource = Directory.CreateDirectory(
+            Path.Combine(gameRoot, GameDetector.ResourceSubpath)).FullName;
+        File.WriteAllText(Path.Combine(resource, "EN.zip"), "english");
+        File.WriteAllText(Path.Combine(resource, "CHS.zip"), "chinese");
+        return gameRoot;
     }
 
     private sealed class TestDirectory : IDisposable

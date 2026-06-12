@@ -5,11 +5,24 @@ namespace FH.LanguageComboTool.Core.Services;
 
 public sealed class GameDetector
 {
+    public const string SteamChannel = "steam";
+    public const string XboxChannel = "xbox";
     public const string Fh5SteamAppId = "1551360";
     public const string Fh6SteamAppId = "2483190";
     public const string Fh5Executable = "ForzaHorizon5.exe";
     public const string Fh6Executable = "forzahorizon6.exe";
+    public const string XboxGamesDirectory = "XboxGames";
+    public const string Fh6XboxInstallDirectory = "Forza Horizon 6";
     public const string ResourceSubpath = @"media\Stripped\StringTables";
+
+    public IReadOnlyList<GameProfile> DetectGames() =>
+        DetectSteamGames()
+            .Concat(DetectXboxGames())
+            .GroupBy(
+                profile => $"{profile.Channel}|{profile.RootPath}",
+                StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .ToList();
 
     public IReadOnlyList<GameProfile> DetectSteamGames()
     {
@@ -60,7 +73,7 @@ public sealed class GameDetector
                 var root = Path.Combine(libraryPath, "steamapps", "common", installDir);
                 try
                 {
-                    var profile = ValidateGameDirectory(root, gameId);
+                    var profile = ValidateGameDirectory(root, gameId, SteamChannel);
                     profiles.Add(profile with { ManifestPath = manifestPath });
                 }
                 catch
@@ -73,29 +86,84 @@ public sealed class GameDetector
         return profiles;
     }
 
-    public GameProfile ValidateGameDirectory(string path, GameId gameId)
+    public IReadOnlyList<GameProfile> DetectXboxGames() =>
+        DetectXboxGames(Directory.GetLogicalDrives());
+
+    public IReadOnlyList<GameProfile> DetectXboxGames(IEnumerable<string> driveRoots)
+    {
+        var profiles = new List<GameProfile>();
+        foreach (var driveRoot in driveRoots.Where(root => !string.IsNullOrWhiteSpace(root)))
+        {
+            try
+            {
+                var installPath = Path.Combine(
+                    driveRoot,
+                    XboxGamesDirectory,
+                    Fh6XboxInstallDirectory);
+                if (!Directory.Exists(installPath))
+                    continue;
+
+                profiles.Add(ValidateGameDirectory(installPath, GameId.Fh6, XboxChannel));
+            }
+            catch
+            {
+                // Ignore inaccessible or incomplete Xbox installations and keep scanning drives.
+            }
+        }
+
+        return profiles
+            .GroupBy(profile => profile.RootPath, StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .ToList();
+    }
+
+    public GameProfile ValidateGameDirectory(string path, GameId gameId, string? channel = null)
     {
         RejectDangerousPath(path);
 
-        var root = Path.GetFullPath(path);
+        var requestedRoot = Path.GetFullPath(path);
+        channel ??= InferChannel(requestedRoot, gameId);
+        if (channel.Equals(XboxChannel, StringComparison.OrdinalIgnoreCase) && gameId != GameId.Fh6)
+            throw new InvalidOperationException("Xbox 版目前仅支持 Forza Horizon 6。");
+
         var executableName = GetExecutableName(gameId);
-        var exePath = Path.Combine(root, executableName);
-        if (!File.Exists(exePath))
-            throw new FileNotFoundException($"在目录中找不到游戏可执行文件“{executableName}”：{root}");
+        var candidates = new[]
+        {
+            requestedRoot,
+            Path.Combine(requestedRoot, "Content")
+        }
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var root = candidates.FirstOrDefault(candidate =>
+            File.Exists(Path.Combine(candidate, executableName)) &&
+            Directory.Exists(Path.Combine(candidate, ResourceSubpath)));
+
+        if (root is null)
+        {
+            var executableRoot = candidates.FirstOrDefault(candidate =>
+                File.Exists(Path.Combine(candidate, executableName)));
+            if (executableRoot is null)
+                throw new FileNotFoundException($"在目录中找不到游戏可执行文件“{executableName}”：{requestedRoot}");
+
+            throw new DirectoryNotFoundException(
+                $"找不到语言资源目录：{Path.Combine(executableRoot, ResourceSubpath)}");
+        }
 
         var resourcePath = Path.Combine(root, ResourceSubpath);
-        if (!Directory.Exists(resourcePath))
-            throw new DirectoryNotFoundException($"找不到语言资源目录：{resourcePath}");
-
         var zipCount = Directory.EnumerateFiles(resourcePath, "*.zip").Count();
         if (zipCount < 2)
             throw new InvalidDataException($"语言资源目录至少需要 2 个 ZIP 文件，当前仅找到 {zipCount} 个：{resourcePath}");
 
+        var normalizedChannel = channel.Equals(XboxChannel, StringComparison.OrdinalIgnoreCase)
+            ? XboxChannel
+            : SteamChannel;
+
         return new GameProfile(
             gameId,
             GetDisplayName(gameId),
-            "steam",
-            GetSteamAppId(gameId),
+            normalizedChannel,
+            normalizedChannel == SteamChannel ? GetSteamAppId(gameId) : "",
             root,
             resourcePath,
             executableName,
@@ -136,6 +204,23 @@ public sealed class GameDetector
         GameId.Fh6 => "Forza Horizon 6",
         _ => throw new ArgumentOutOfRangeException(nameof(gameId), gameId, null)
     };
+
+    private static string InferChannel(string path, GameId gameId)
+    {
+        if (gameId != GameId.Fh6)
+            return SteamChannel;
+
+        var directory = new DirectoryInfo(path.TrimEnd(
+            Path.DirectorySeparatorChar,
+            Path.AltDirectorySeparatorChar));
+        if (directory.Name.Equals("Content", StringComparison.OrdinalIgnoreCase))
+            directory = directory.Parent ?? directory;
+
+        return directory.Name.Equals(Fh6XboxInstallDirectory, StringComparison.OrdinalIgnoreCase) &&
+               directory.Parent?.Name.Equals(XboxGamesDirectory, StringComparison.OrdinalIgnoreCase) == true
+            ? XboxChannel
+            : SteamChannel;
+    }
 
     private static string? ReadSteamPath()
     {

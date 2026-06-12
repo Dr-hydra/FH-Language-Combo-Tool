@@ -2,6 +2,19 @@
 
 All notable changes to FH Language Combo Tool are documented here.
 
+## [2.1.0] - 2026-06-12
+
+### Added
+
+- Automatic detection for the Xbox version of Forza Horizon 6 under
+  `<drive>:\XboxGames\Forza Horizon 6`.
+- Support for Xbox installations that place game content in a `Content`
+  subdirectory.
+- Manual Xbox installation detection and Xbox channel labeling in the game
+  list.
+- Xbox language-pack guidance explaining how to trigger downloads from the
+  in-game language setting.
+
 ## [1.2.0] - 2026-06-07
 
 ### Added
@@ -29,4 +42,5 @@ All notable changes to FH Language Combo Tool are documented here.
 - Prevents externally modified files without a valid backup from being
   overwritten automatically.
 
+[2.1.0]: https://github.com/Dr-hydra/FH-Language-Combo-Tool/releases/tag/v2.1.0
 [1.2.0]: https://github.com/Dr-hydra/FH-Language-Combo-Tool/releases/tag/v1.2.0

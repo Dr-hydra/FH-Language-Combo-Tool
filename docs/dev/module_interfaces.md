@@ -4,8 +4,8 @@
 
 ### GameDetector
 
-读取 Steam 注册表路径和 `libraryfolders.vdf`，检测 FH5 / FH6，并验证手动
-选择的游戏目录。
+读取 Steam 注册表路径和 `libraryfolders.vdf` 检测 FH5 / FH6，同时扫描
+各盘符的 `XboxGames\Forza Horizon 6`，并验证手动选择的游戏目录。
 
 ### ResourceScanner
 
@@ -23,8 +23,8 @@ SHA-256。
 
 ### ApplyEngine
 
-校验文件、创建备份、通过唯一临时文件原子替换目标、更新 Steam 语言，并在
-失败时尝试回滚。
+校验文件、创建备份、通过唯一临时文件原子替换目标、更新适用的游戏语言配置，
+并在失败时尝试回滚。
 
 ### ConfigurationEngine
 
@@ -35,7 +35,7 @@ SHA-256。
 ### RestoreEngine
 
 校验备份清单路径和 SHA-256，仅允许写回清单声明的资源目录，并恢复修改前的
-Steam 语言状态。
+语言状态。
 
 ### ReapplyEngine
 
@@ -48,8 +48,8 @@ Steam 语言状态。
 
 ### SteamLanguageService
 
-读写 appmanifest 的 `language` 与本地 `UserPreferredLang`，并能恢复原先不
-存在配置的状态。
+读写 Steam appmanifest 的 `language` 与游戏本地 `UserPreferredLang`，并能
+恢复原先不存在配置的状态。
 
 ### ProcessService
 
